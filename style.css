@@ -8,11 +8,8 @@ body {
     margin: 0;
     box-sizing: border-box;
     overflow-x: hidden;
-    padding-bottom: 70px; /* Space for bottom nav */
-}
-
-@media (min-width: 901px) {
-    body { padding-bottom: 0; }
+    padding-bottom: 90px;
+    /* Mas espacio para el nav premium */
 }
 
 
@@ -761,6 +758,60 @@ footer {
 --- RESPONSIVIDAD MÓVIL (UNIFICADA) ---
 ==============================================
 */
+/* --- MOBILE PREMIUM APP NAV (GLOBAL) --- */
+.mobile-bottom-nav {
+    position: fixed;
+    bottom: 25px;
+    /* Floating bar */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 500px;
+    height: 65px;
+    background: rgba(30, 30, 30, 0.85);
+    backdrop-filter: blur(15px);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 35px;
+    z-index: 2000;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+    padding: 0 10px;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #888 !important;
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    flex: 1;
+}
+
+.nav-item i {
+    font-size: 20px;
+    margin-bottom: 3px;
+    transition: transform 0.3s;
+}
+
+.nav-item:hover i {
+    transform: translateY(-5px);
+    color: #f39c12;
+}
+
+.nav-item.active {
+    color: #f39c12 !important;
+}
+
+.nav-item.active i {
+    transform: translateY(-8px) scale(1.15);
+    text-shadow: 0 0 15px rgba(243, 156, 18, 0.5);
+}
+
 @media (max-width: 900px) {
 
     /* --- Landing Page Móvil --- */
@@ -872,41 +923,6 @@ footer {
         gap: 10px;
     }
 
-    /* --- MOBILE PREMIUM APP NAV --- */
-    .mobile-bottom-nav {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 70px;
-        background-color: #1a1a1a;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        border-top: 1px solid #333;
-        z-index: 2000;
-        box-shadow: 0 -4px 15px rgba(0,0,0,0.5);
-    }
-
-    .nav-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        color: #888;
-        text-decoration: none;
-        font-size: 11px;
-        transition: color 0.3s;
-    }
-
-    .nav-item i {
-        font-size: 22px;
-        margin-bottom: 4px;
-    }
-
-    .nav-item.active {
-        color: #f39c12;
-    }
-
     /* PWA Install Banner */
     #pwa-install-banner {
         position: fixed;
@@ -921,7 +937,7 @@ footer {
         align-items: center;
         z-index: 3000;
         font-weight: 600;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         transform: translateY(-100%);
         transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }

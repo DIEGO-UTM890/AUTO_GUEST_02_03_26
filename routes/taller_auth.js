@@ -14,8 +14,16 @@ router.post('/login-taller', async (req, res) => {
         if (users.length === 0) return res.status(401).json({ mensaje: 'Usuario no encontrado.' });
         const user = users[0];
 
-        // 2. Verificar contraseña (TEXTO PLANO para compatibilidad)
-        if (password !== user.password) {
+        // 2. Verificar contraseña con Bcrypt
+        const bcrypt = require('bcryptjs');
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch && password === user.password) {
+            // Fallback para contraseñas en texto plano (migración)
+            isMatch = true;
+        }
+
+        if (!isMatch) {
             return res.status(401).json({ mensaje: 'Contraseña incorrecta.' });
         }
 
