@@ -135,4 +135,52 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         }
     }
+
+    // ==========================================
+    // MÓDULO GLOBAL: Ojo en Contraseñas
+    // ==========================================
+    const passwordInputs = document.querySelectorAll('input[type="password"]');
+    passwordInputs.forEach(input => {
+        // Envolver el input en un div relativo para posicionamiento exacto
+        const wrapper = document.createElement('div');
+        wrapper.style.position = 'relative';
+        wrapper.style.display = 'flex';
+        wrapper.style.alignItems = 'center';
+        wrapper.style.width = '100%';
+
+        // Insertar wrapper en el DOM
+        input.parentNode.insertBefore(wrapper, input);
+        wrapper.appendChild(input);
+
+        // Crear ícono
+        const eyeIcon = document.createElement('i');
+        eyeIcon.className = 'fas fa-eye';
+        eyeIcon.style.cssText = `
+            position: absolute;
+            right: 15px;
+            cursor: pointer;
+            color: #888;
+            font-size: 1.1em;
+            z-index: 10;
+            transition: color 0.3s;
+        `;
+
+        // Alternar visualización
+        eyeIcon.addEventListener('click', () => {
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeIcon.className = 'fas fa-eye-slash';
+                eyeIcon.style.color = '#f39c12';
+            } else {
+                input.type = 'password';
+                eyeIcon.className = 'fas fa-eye';
+                eyeIcon.style.color = '#888';
+            }
+        });
+
+        wrapper.appendChild(eyeIcon);
+
+        // Ajustar el padding del input para que el texto no toque el ojo
+        input.style.paddingRight = '45px';
+    });
 });
