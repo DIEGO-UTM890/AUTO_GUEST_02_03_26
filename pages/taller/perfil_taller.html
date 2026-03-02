@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil del Taller - AutoGuest</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        body {
+            background: #1a1a1a;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .profile-card {
+            background: #2c2c2c;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-left: 5px solid #f39c12;
+        }
+
+        h1 {
+            color: #f39c12;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 40px;
+        }
+
+        .photo-column {
+            text-align: center;
+        }
+
+        .profile-photo {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #f39c12;
+            margin-bottom: 15px;
+            background: #333;
+        }
+
+        .btn-photo {
+            background: transparent;
+            color: #3498db;
+            border: none;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .form-section {
+            margin-bottom: 25px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #aaa;
+            font-size: 0.9em;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background: #333;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: #fff;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #f39c12;
+        }
+
+        .form-control:disabled {
+            background: #222;
+            color: #777;
+            border-color: #333;
+            pointer-events: none;
+        }
+
+        .schedule-section h3 {
+            color: #f39c12;
+            margin-top: 40px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .schedule-row {
+            display: grid;
+            grid-template-columns: 120px 1fr 1fr 100px;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+            background: #333;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .day-name {
+            font-weight: bold;
+            color: #f39c12;
+        }
+
+        .closed-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .actions {
+            margin-top: 40px;
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        .btn-save {
+            background: #f39c12;
+            color: #000;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: 0.3s;
+        }
+
+        .btn-save:hover {
+            background: #e67e22;
+            transform: translateY(-2px);
+        }
+
+        .btn-back {
+            background: transparent;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <button class="btn-back" onclick="location.href='../../portal_taller.html'"><i class="fas fa-arrow-left"></i>
+            Volver al Panel</button>
+
+        <div class="profile-card" style="margin-top: 20px;">
+            <h1><i class="fas fa-id-card"></i> Perfil del Taller</h1>
+
+            <form id="profileForm">
+                <div class="profile-grid">
+                    <div class="photo-column">
+                        <img id="previewFoto" src="../../imagenes/default_taller.png" class="profile-photo" alt="Logo">
+                        <input type="file" id="fotoInput" accept="image/*" style="display: none;">
+                        <button type="button" class="btn-photo"
+                            onclick="document.getElementById('fotoInput').click()">Cambiar Foto / Logo</button>
+                    </div>
+
+                    <div class="details-column">
+                        <div class="form-section">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Nombre del Taller</label>
+                                    <input type="text" id="nombreTaller" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Dueño / Administrador (Solo lectura)</label>
+                                    <input type="text" id="adminName" class="form-control" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-group">
+                                <label>Dirección Física</label>
+                                <input type="text" id="direccion" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Correo Electrónico</label>
+                                    <input type="email" id="email" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Teléfono de Contacto</label>
+                                    <input type="tel" id="telefono" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-group">
+                                <label>Link de Google Maps</label>
+                                <input type="url" id="linkMaps" class="form-control"
+                                    placeholder="https://www.google.com/maps/...">
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-group">
+                                <label>Sobre Nosotros (Descripción Pública)</label>
+                                <textarea id="sobreNosotros" class="form-control" rows="4"
+                                    placeholder="Describe tu taller, especialidades, etc..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="schedule-section">
+                    <h3><i class="fas fa-clock"></i> Horario de Atención</h3>
+                    <p style="color: #888; margin-bottom: 15px;">Define tus horarios. Los clientes no podrán agendar
+                        citas fuera de estos rangos.</p>
+
+                    <div id="scheduleContainer">
+                        <!-- Days will be generated here -->
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button type="submit" class="btn-save" id="btnSave"><i class="fas fa-save"></i> Guardar
+                        Todo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="loadingOverlay" class="loading-overlay">
+        <div style="text-align: center;">
+            <i class="fas fa-spinner fa-spin fa-3x" style="color: #f39c12;"></i>
+            <p style="margin-top: 15px;">Guardando cambios...</p>
+        </div>
+    </div>
+
+    <script>
+        const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+        let currentBase64 = null;
+        let originalSchedule = {};
+
+        // Generate schedule rows
+        const container = document.getElementById('scheduleContainer');
+        days.forEach(day => {
+            const row = document.createElement('div');
+            row.className = 'schedule-row';
+            row.innerHTML = `
+                <div class="day-name">${day}</div>
+                <div class="form-group">
+                    <label>Apertura</label>
+                    <input type="time" class="form-control open-time" data-day="${day}" value="09:00">
+                </div>
+                <div class="form-group">
+                    <label>Cierre</label>
+                    <input type="time" class="form-control close-time" data-day="${day}" value="18:00">
+                </div>
+                <div class="closed-toggle">
+                    <input type="checkbox" class="is-closed" data-day="${day}">
+                    <span>Cerrado</span>
+                </div>
+            `;
+            container.appendChild(row);
+        });
+
+        // Initialize and load data
+        window.addEventListener('DOMContentLoaded', async () => {
+            const loading = document.getElementById('loadingOverlay');
+            loading.style.display = 'flex';
+
+            try {
+                const res = await fetch('/api/taller/perfil');
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('nombreTaller').value = data.nombre || '';
+                    document.getElementById('adminName').value = data.adminNombre || 'Administrador';
+                    document.getElementById('direccion').value = data.direccion || '';
+                    document.getElementById('email').value = data.email || '';
+                    document.getElementById('telefono').value = data.telefono_contacto || '';
+                    document.getElementById('linkMaps').value = data.link_maps || '';
+                    document.getElementById('sobreNosotros').value = data.sobre_nosotros || '';
+                    if (data.foto_perfil) {
+                        document.getElementById('previewFoto').src = data.foto_perfil;
+                    }
+
+                    // Load Schedule
+                    if (data.horario) {
+                        try {
+                            const schedule = JSON.parse(data.horario);
+                            Object.keys(schedule).forEach(day => {
+                                const row = container.querySelector(`.schedule-row:has([data-day="${day}"])`);
+                                if (row) {
+                                    row.querySelector('.open-time').value = schedule[day].open;
+                                    row.querySelector('.close-time').value = schedule[day].close;
+                                    row.querySelector('.is-closed').checked = schedule[day].closed;
+                                    toggleRow(row, schedule[day].closed);
+                                }
+                            });
+                        } catch (e) { console.error("Error parsing schedule", e); }
+                    }
+                }
+            } catch (e) { alert("Error al cargar perfil"); }
+            finally { loading.style.display = 'none'; }
+
+            // Handle closed toggle
+            document.querySelectorAll('.is-closed').forEach(cb => {
+                cb.addEventListener('change', (e) => {
+                    toggleRow(e.target.closest('.schedule-row'), e.target.checked);
+                });
+            });
+        });
+
+        function toggleRow(row, isClosed) {
+            const inputs = row.querySelectorAll('input[type="time"]');
+            inputs.forEach(i => i.disabled = isClosed);
+            row.style.opacity = isClosed ? '0.5' : '1';
+        }
+
+        // Image Handling
+        document.getElementById('fotoInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (evt) => {
+                    // Small local compression would be good here too
+                    currentBase64 = evt.target.result;
+                    document.getElementById('previewFoto').src = currentBase64;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Save
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const loading = document.getElementById('loadingOverlay');
+            loading.style.display = 'flex';
+
+            const schedule = {};
+            document.querySelectorAll('.schedule-row').forEach(row => {
+                const day = row.querySelector('.day-name').textContent;
+                schedule[day] = {
+                    open: row.querySelector('.open-time').value,
+                    close: row.querySelector('.close-time').value,
+                    closed: row.querySelector('.is-closed').checked
+                };
+            });
+
+            const body = {
+                nombre: document.getElementById('nombreTaller').value,
+                direccion: document.getElementById('direccion').value,
+                email: document.getElementById('email').value,
+                telefono: document.getElementById('telefono').value,
+                link_maps: document.getElementById('linkMaps').value,
+                sobre_nosotros: document.getElementById('sobreNosotros').value,
+                horario: JSON.stringify(schedule)
+            };
+            if (currentBase64) body.foto_perfil = currentBase64;
+
+            try {
+                const res = await fetch('/api/taller/perfil', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                if (res.ok) {
+                    alert("Perfil actualizado correctamente");
+                    sessionStorage.setItem('tallerName', body.nombre);
+                } else {
+                    const error = await res.json();
+                    alert("Error: " + (error.error || "No se pudo ahorrar"));
+                }
+            } catch (e) { alert("Error de conexión"); }
+            finally { loading.style.display = 'none'; }
+        });
+    </script>
+</body>
+
+</html>

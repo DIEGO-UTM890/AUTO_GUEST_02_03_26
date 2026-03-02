@@ -1,0 +1,17 @@
+{
+    "name": "AutoGuest - Gestión Automotriz",
+    "short_name": "AutoGuest",
+    "description": "Tu solución integral para la gestión de talleres y servicios automotrices.",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#1a1a1a",
+    "theme_color": "#f39c12",
+    "icons": [
+        {
+            "src": "/imagenes/app_icon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
