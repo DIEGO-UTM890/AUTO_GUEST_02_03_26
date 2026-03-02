@@ -95,18 +95,25 @@ router.post('/taller', async (req, res) => {
         const idTaller = 'T' + nanoid(5);
         const idAdmin = 'UA' + nanoid(5);
 
-        // Guardamos Taller
-        await db.query('INSERT INTO taller (idTaller, nombre, direccion) VALUES (?, ?, ?)', [idTaller, nombreTaller, direccion]);
+        // --- ENCRIPTAR CONTRASEÑA ---
+        const bcrypt = require('bcryptjs');
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Guardamos Usuario (PASSWORD PLANO PARA QUE COINCIDA CON LA LÓGICA DE ARRIBA)
+        // 1. Guardamos Taller (OBLIGATORIO: incluir idUsuarioAdmin en Aiven)
+        await db.query('INSERT INTO taller (idTaller, nombre, direccion, idUsuarioAdmin, telefono, email) VALUES (?, ?, ?, ?, ?, ?)',
+            [idTaller, nombreTaller, direccion, idAdmin, telefono, email]);
+
+        // 2. Guardamos Usuario (Usamos la clave encriptada)
         await db.query('INSERT INTO usuario (idUsuario, nombre, email, password, telefono) VALUES (?, ?, ?, ?, ?)',
-            [idAdmin, nombreAdmin, email, password, telefono]);
+            [idAdmin, nombreAdmin, email, hashedPassword, telefono]);
 
+        // 3. Vincular en la tabla administrador
         await db.query('INSERT INTO administrador (idUsuario, idTaller) VALUES (?, ?)', [idAdmin, idTaller]);
 
-        res.status(201).json({ mensaje: 'Taller registrado.' });
+        res.status(201).json({ mensaje: 'Taller registrado con éxito.' });
     } catch (e) {
-        res.status(500).json({ mensaje: 'Error' });
+        console.error('Error en registro:', e);
+        res.status(500).json({ mensaje: 'Error al registrar el taller en la base de datos.' });
     }
 });
 
